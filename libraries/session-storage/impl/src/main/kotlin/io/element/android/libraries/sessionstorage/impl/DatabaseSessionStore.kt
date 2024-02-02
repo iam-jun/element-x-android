@@ -16,6 +16,7 @@
 
 package io.element.android.libraries.sessionstorage.impl
 
+import android.util.Log
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull

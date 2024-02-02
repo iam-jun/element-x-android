@@ -31,6 +31,7 @@ anvil {
 
 dependencies {
     implementation(projects.anvilannotations)
+    implementation(libs.gson)
     anvil(projects.anvilcodegen)
     implementation(projects.libraries.core)
     implementation(projects.libraries.architecture)

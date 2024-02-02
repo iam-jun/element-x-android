@@ -16,6 +16,7 @@
 
 package io.element.android.libraries.sessionstorage.impl.memory
 
+import android.util.Log
 import io.element.android.libraries.sessionstorage.api.LoggedInState
 import io.element.android.libraries.sessionstorage.api.SessionData
 import io.element.android.libraries.sessionstorage.api.SessionStore
@@ -28,6 +29,7 @@ class InMemorySessionStore : SessionStore {
 
     override fun isLoggedIn(): Flow<LoggedInState> {
         return sessionDataFlow.map {
+            Log.d("AOH Chat", "InMemorySessionStore isLoggedIn it $it")
             if (it == null) {
                 LoggedInState.NotLoggedIn
             } else {

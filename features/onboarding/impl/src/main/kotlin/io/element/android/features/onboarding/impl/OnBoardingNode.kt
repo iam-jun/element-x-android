@@ -16,6 +16,9 @@
 
 package io.element.android.features.onboarding.impl
 
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.modality.BuildContext
@@ -27,13 +30,15 @@ import dagger.assisted.AssistedInject
 import io.element.android.anvilannotations.ContributesNode
 import io.element.android.features.onboarding.api.OnBoardingEntryPoint
 import io.element.android.libraries.di.AppScope
+import io.element.android.libraries.di.ApplicationContext
+import timber.log.Timber
 
 @ContributesNode(AppScope::class)
 class OnBoardingNode @AssistedInject constructor(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     private val presenter: OnBoardingPresenter,
-) : Node(
+    ) : Node(
     buildContext = buildContext,
     plugins = plugins
 ) {

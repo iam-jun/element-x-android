@@ -73,6 +73,7 @@ class RustMatrixAuthenticationService @Inject constructor(
     private var currentHomeserver = MutableStateFlow<MatrixHomeServerDetails?>(null)
 
     override fun loggedInStateFlow(): Flow<LoggedInState> {
+
         return sessionStore.isLoggedIn()
     }
 

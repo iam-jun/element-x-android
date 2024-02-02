@@ -43,10 +43,10 @@ plugins {
 setupKover()
 
 android {
-    namespace = "io.element.android.x"
+    namespace = "com.aoh.chat"
 
     defaultConfig {
-        applicationId = "io.element.android.x"
+        applicationId = "com.aoh.chat"
         targetSdk = Versions.targetSdk
         versionCode = Versions.versionCode
         versionName = Versions.versionName
@@ -97,13 +97,13 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "app_name", "Element X dbg")
+            resValue("string", "app_name", "AOH Chat Dev")
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
         }
 
         getByName("release") {
-            resValue("string", "app_name", "Element X")
+            resValue("string", "app_name", "AOH Chat")
             signingConfig = signingConfigs.getByName("debug")
 
             postprocessing {
@@ -120,7 +120,7 @@ android {
             initWith(release)
             applicationIdSuffix = ".nightly"
             versionNameSuffix = "-nightly"
-            resValue("string", "app_name", "Element X nightly")
+            resValue("string", "app_name", "AOH Chat nightly")
             matchingFallbacks += listOf("release")
             signingConfig = signingConfigs.getByName("nightly")
 

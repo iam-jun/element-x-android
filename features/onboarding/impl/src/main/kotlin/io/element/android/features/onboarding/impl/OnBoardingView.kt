@@ -27,6 +27,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.BiasAlignment
@@ -36,12 +39,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
+import io.element.android.features.onboarding.impl.credential.LoginSharedCredentialEvents
+import io.element.android.features.onboarding.impl.credential.loginError
+import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.designsystem.atomic.atoms.ElementLogoAtom
 import io.element.android.libraries.designsystem.atomic.atoms.ElementLogoAtomSize
 import io.element.android.libraries.designsystem.atomic.molecules.ButtonColumnMolecule
 import io.element.android.libraries.designsystem.atomic.pages.OnBoardingPage
+import io.element.android.libraries.designsystem.components.dialogs.ErrorDialog
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Button
@@ -53,6 +61,7 @@ import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 import io.element.android.libraries.ui.strings.CommonStrings
+import timber.log.Timber
 
 // Refs:
 // FTUE:
@@ -69,6 +78,11 @@ fun OnBoardingView(
     onReportProblem: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    fun submit() {
+        Timber.tag("Onboarding").d("Start submit")
+        state.eventSink(LoginSharedCredentialEvents.Submit)
+    }
+
     OnBoardingPage(
         modifier = modifier,
         content = {
@@ -76,12 +90,18 @@ fun OnBoardingView(
                 state = state,
                 onOpenDeveloperSettings = onOpenDeveloperSettings
             )
+            if (state.loginAction is AsyncData.Failure) {
+                LoginErrorDialog(error = state.loginAction.error, onDismiss = {
+                    state.eventSink(LoginSharedCredentialEvents.ClearError)
+                })
+            }
         },
         footer = {
             OnBoardingButtons(
                 state = state,
                 onSignInWithQrCode = onSignInWithQrCode,
                 onSignIn = onSignIn,
+                onSubmit = ::submit,
                 onCreateAccount = onCreateAccount,
                 onReportProblem = onReportProblem,
             )
@@ -151,16 +171,25 @@ private fun OnBoardingContent(
     }
 }
 
+
 @Composable
 private fun OnBoardingButtons(
     state: OnBoardingState,
     onSignInWithQrCode: () -> Unit,
     onSignIn: () -> Unit,
+    onSubmit: () -> Unit,
     onCreateAccount: () -> Unit,
     onReportProblem: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isLoading by remember(state.loginAction) {
+        derivedStateOf {
+            state.loginAction is AsyncData.Loading
+        }
+    }
+
     ButtonColumnMolecule(modifier = modifier) {
+
         val signInButtonStringRes = if (state.canLoginWithQrCode || state.canCreateAccount) {
             R.string.screen_onboarding_sign_in_manually
         } else {
@@ -174,13 +203,26 @@ private fun OnBoardingButtons(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        Button(
-            text = stringResource(id = signInButtonStringRes),
-            onClick = onSignIn,
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(TestTags.onBoardingSignIn)
-        )
+
+        if (state.sharedCredential != null){
+            Button(
+                text = stringResource(id = R.string.screen_onboarding_sign_in_as, state.sharedCredential.username),
+                enabled = !isLoading,
+                showProgress = isLoading,
+                onClick = onSubmit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(TestTags.onBoardingSignIn)
+            )
+        }else {
+            Button(
+                text = stringResource(id = signInButtonStringRes),
+                onClick = onSignIn,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(TestTags.onBoardingSignIn)
+            )
+        }
         if (state.canCreateAccount) {
             OutlinedButton(
                 text = stringResource(id = R.string.screen_onboarding_sign_up),
@@ -213,6 +255,16 @@ internal fun OnBoardingScreenPreview(
         onSignIn = {},
         onCreateAccount = {},
         onOpenDeveloperSettings = {},
-        onReportProblem = {},
+        onReportProblem = {}
+    )
+}
+
+
+@Composable
+private fun LoginErrorDialog(error: Throwable, onDismiss: () -> Unit) {
+    ErrorDialog(
+        title = stringResource(id = CommonStrings.dialog_title_error),
+        content = stringResource(loginError(error)),
+        onDismiss = onDismiss
     )
 }
