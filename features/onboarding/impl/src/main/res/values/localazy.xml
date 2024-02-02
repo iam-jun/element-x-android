@@ -3,7 +3,12 @@
   <string name="screen_onboarding_sign_in_manually">"Sign in manually"</string>
   <string name="screen_onboarding_sign_in_with_qr_code">"Sign in with QR code"</string>
   <string name="screen_onboarding_sign_up">"Create account"</string>
-  <string name="screen_onboarding_welcome_message">"Welcome to the fastest Element ever. Supercharged for speed and simplicity."</string>
+  <string name="screen_onboarding_welcome_message">"The fastest Element ever. Supercharged for speed and simplicity."</string>
   <string name="screen_onboarding_welcome_subtitle">"Welcome to %1$s. Supercharged, for speed and simplicity."</string>
-  <string name="screen_onboarding_welcome_title">"Be in your element"</string>
+  <string name="screen_onboarding_welcome_title">"Welcome to AOH Chat"</string>
+  <string name="screen_onboarding_sign_in_as">"Sign in as %1$s"</string>
+    <string name="screen_login_error_deactivated_account">"This account has been deactivated."</string>
+    <string name="screen_login_error_invalid_credentials">"Incorrect username and/or password"</string>
+    <string name="screen_login_error_invalid_user_id">"This is not a valid user identifier. Expected format: ‘@user:homeserver.org’"</string>
+    <string name="screen_login_error_unsupported_authentication">"The selected homeserver doesn\'t support password or OIDC login. Please contact your admin or choose another homeserver."</string>
 </resources>

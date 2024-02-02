@@ -19,10 +19,11 @@
 
     <!-- To be able to install APK from the application -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="com.aoh.READ_DATABASE" />
 
     <!--  Do not enable enableOnBackInvokedCallback until https://issuetracker.google.com/issues/271303558 is fixed -->
     <application
-        android:name=".ElementXApplication"
+        android:name="com.aoh.chat.ElementXApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="false"
@@ -64,7 +65,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:host="open"
-                    android:scheme="elementx" />
+                    android:scheme="aoh-chat" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -72,7 +73,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="io.element" />
+                <data android:scheme="com.aoh.chat" />
             </intent-filter>
         </activity>
 
@@ -93,5 +94,9 @@
         </provider>
 
     </application>
+    <queries>
+        <package android:name="com.aoh" />
+    </queries>
+
 
 </manifest>

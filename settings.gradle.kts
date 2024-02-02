@@ -1,5 +1,8 @@
 import java.net.URI
 
+include(":aohchat")
+
+
 /*
  * Copyright (c) 2022 New Vector Ltd
  *

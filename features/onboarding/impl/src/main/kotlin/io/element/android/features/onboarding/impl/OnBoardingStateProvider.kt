@@ -17,6 +17,8 @@
 package io.element.android.features.onboarding.impl
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.element.android.features.onboarding.impl.credential.SharedCredential
+import io.element.android.libraries.architecture.AsyncData
 
 open class OnBoardingStateProvider : PreviewParameterProvider<OnBoardingState> {
     override val values: Sequence<OnBoardingState>
@@ -32,9 +34,13 @@ open class OnBoardingStateProvider : PreviewParameterProvider<OnBoardingState> {
 fun anOnBoardingState(
     isDebugBuild: Boolean = false,
     canLoginWithQrCode: Boolean = false,
-    canCreateAccount: Boolean = false
+    canCreateAccount: Boolean = false,
+    sharedCredential: SharedCredential? = null
 ) = OnBoardingState(
     isDebugBuild = isDebugBuild,
     canLoginWithQrCode = canLoginWithQrCode,
-    canCreateAccount = canCreateAccount
+    canCreateAccount = canCreateAccount,
+    sharedCredential = sharedCredential,
+    loginAction = AsyncData.Uninitialized,
+    eventSink = {}
 )

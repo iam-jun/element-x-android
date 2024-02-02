@@ -20,6 +20,7 @@ import com.bumble.appyx.core.state.MutableSavedStateMap
 import com.bumble.appyx.core.state.SavedStateMap
 import io.element.android.appnav.di.MatrixClientsHolder
 import io.element.android.features.login.api.LoginUserStory
+import io.element.android.features.onboarding.api.LoginSharedCredentialUserStory
 import io.element.android.features.preferences.api.CacheService
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.sessionstorage.api.LoggedInState
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val SAVE_INSTANCE_KEY = "io.element.android.x.RootNavStateFlowFactory.SAVE_INSTANCE_KEY"
@@ -40,6 +42,7 @@ class RootNavStateFlowFactory @Inject constructor(
     private val cacheService: CacheService,
     private val matrixClientsHolder: MatrixClientsHolder,
     private val loginUserStory: LoginUserStory,
+    private val loginSharedCredentialUserStory: LoginSharedCredentialUserStory
 ) {
     private var currentCacheIndex = 0
 
@@ -48,8 +51,10 @@ class RootNavStateFlowFactory @Inject constructor(
             cacheIndexFlow(savedStateMap),
             authenticationService.loggedInStateFlow(),
             loginUserStory.loginFlowIsDone,
-        ) { cacheIndex, loggedInState, loginFlowIsDone ->
-            if (loginFlowIsDone) {
+            loginSharedCredentialUserStory.loginFlowIsDone
+        ) { cacheIndex, loggedInState, loginFlowIsDone, loginSharedCredentialFlowIsDone ->
+            Timber.tag("Onboarding").d("loginSharedCredentialFlowIsDone $loginFlowIsDone $loginSharedCredentialFlowIsDone $loggedInState")
+            if (loginFlowIsDone || loginSharedCredentialFlowIsDone) {
                 RootNavState(cacheIndex = cacheIndex, loggedInState = loggedInState)
             } else {
                 RootNavState(cacheIndex = cacheIndex, loggedInState = LoggedInState.NotLoggedIn)

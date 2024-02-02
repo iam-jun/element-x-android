@@ -16,8 +16,16 @@
 
 package io.element.android.features.onboarding.impl
 
+import io.element.android.features.onboarding.impl.credential.LoginSharedCredentialEvents
+import io.element.android.features.onboarding.impl.credential.SharedCredential
+import io.element.android.libraries.architecture.AsyncData
+import io.element.android.libraries.matrix.api.core.SessionId
+
 data class OnBoardingState(
     val isDebugBuild: Boolean,
     val canLoginWithQrCode: Boolean,
     val canCreateAccount: Boolean,
+    val sharedCredential: SharedCredential?,
+    val loginAction: AsyncData<SessionId>,
+    val eventSink: (LoginSharedCredentialEvents) -> Unit
 )
